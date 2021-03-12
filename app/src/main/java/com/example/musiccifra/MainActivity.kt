@@ -11,8 +11,9 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.musiccifra.adapter.MyViewPagerAdapter
+import com.example.musiccifra.fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
-
 
 //Kotlin Top constants:
 
@@ -25,11 +26,15 @@ const val READ_STORAGE_PERMISSION_REQUEST_CODE = 103
 // TAG to print logs
 const val TAG = "layon.f" //like: MusicApp
 
-//TODO create material Tab "All musics", "last Music", "favorit Music"
+//TODO change the navigation bar color
+//TODO create material Tab "All musics", "last Music", "favorite Music"
 //TODO create recycle list from all tabs
 //TODO open the music pdf from uri
-//TODO add the favorit music list feature
-//TODO feature to download files from generic oficial music
+//TODO add the favorite music list feature
+//TODO feature to download files from generic official music
+//TODO get the list of music out of UIThread
+//TODO implement the fragment
+//TODO a setting panel
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,6 +51,17 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, musics)
         etText.setAdapter(adapter)
 
+        //configute the music tabs
+        setupTabs()
+    }
+
+    private fun setupTabs(){
+        val adapter = MyViewPagerAdapter(supportFragmentManager)
+        adapter.addFragment(OneFragment(), "Primeiro")
+        adapter.addFragment(TwoFragment(), "Segundo")
+        adapter.addFragment(ThreeFragment(), "Terceiro")
+        viewPager.adapter = adapter
+        my_tablayout.setupWithViewPager(viewPager)
     }
 
     //Util function to check if the app has the permission
@@ -70,9 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     //function to get the music list names in sdcard/Download/PATHMUSICS
     fun getMusicNamesAvailable(): List<String> {
-
         var musicsList = listOf<String>("Musica 1", "Musica 2", "Musica 3")
-
         //Check if sdcard is mounted or not
         if(getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             Log.d(TAG, "The getExternalStorageState() is mounted")
@@ -85,13 +99,12 @@ class MainActivity : AppCompatActivity() {
                     musicsList = musicList.map {it.name}
                     //TODO: this for is only to test, remove this in feature
                     for(music in musicsList) {
-                        Log.d(TAG, "music: $music")
+                        //Log.d(TAG, "music: $music")
                     }
                 } else {
                     Log.d(TAG, "musicList == null")
                 }
             } else {
-                //TODO download the files from google drive
                 Log.d(TAG, "$PATHMUSICS is NOT a directory")
             }
         } else {
