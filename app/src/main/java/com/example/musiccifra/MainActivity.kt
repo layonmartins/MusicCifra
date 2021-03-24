@@ -26,15 +26,15 @@ const val READ_STORAGE_PERMISSION_REQUEST_CODE = 103
 // TAG to print logs
 const val TAG = "layon.f" //like: MusicApp
 
-//TODO change the navigation bar color
-//TODO create material Tab "All musics", "last Music", "favorite Music"
 //TODO create recycle list from all tabs
+//TODO create a static class ResourceUtils that get the list of music from sdcard/Download/PATHMUSICS
 //TODO open the music pdf from uri
 //TODO add the favorite music list feature
 //TODO feature to download files from generic official music
 //TODO get the list of music out of UIThread
 //TODO implement the fragment
 //TODO a setting panel
+//TODO add support for Portugues e Espanhol
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,9 +57,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupTabs(){
         val adapter = MyViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(OneFragment(), "Primeiro")
-        adapter.addFragment(TwoFragment(), "Segundo")
-        adapter.addFragment(ThreeFragment(), "Terceiro")
+        adapter.addFragment(OneFragment(), "Todas")
+        adapter.addFragment(TwoFragment(), "Favoritas")
+        adapter.addFragment(ThreeFragment(), "Últimas")
         viewPager.adapter = adapter
         my_tablayout.setupWithViewPager(viewPager)
     }
