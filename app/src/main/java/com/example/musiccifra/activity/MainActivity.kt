@@ -1,19 +1,26 @@
-package com.example.musiccifra
+package com.example.musiccifra.activity
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Environment.*
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.musiccifra.R
+import com.example.musiccifra.Util.ResourcesUtil
 import com.example.musiccifra.adapter.MyViewPagerAdapter
 import com.example.musiccifra.fragment.*
+import com.example.musiccifra.model.Music
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 //Kotlin Top constants:
 
@@ -35,6 +42,9 @@ const val TAG = "layon.f" //like: MusicApp
 //TODO implement the fragment
 //TODO a setting panel
 //TODO add support for Portugues e Espanhol
+//TODO open pdf on click
+//TODO apply styles on Material AutoComplete
+//TODO rework the autocomplete: It is like be good, the texts are overriding. Maybe is better to hide the recycler view before.
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,9 +57,21 @@ class MainActivity : AppCompatActivity() {
             requestPermissionForReadExtertalStorage()
         }
 
-        val musics = getMusicNamesAvailable()
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, musics)
+        //configure auto complete
+        val musics = ResourcesUtil.getMusicNamesAvailable()
+        val adapter = ArrayAdapter<Music>(this, android.R.layout.simple_dropdown_item_1line, musics)
         etText.setAdapter(adapter)
+        etText.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
+
+            //TODO create a util method to call the PdfViewActivity
+            val intent = Intent(this, PdfViewActivity::class.java)
+            //URI should be like: content://0@media/external/file/2792
+            val music = adapter.getItem(position)
+            Log.d("layon.f", "AutoComplite clicked name: ${music?.name} uri: ${music?.uri}")
+            intent.putExtra("URI", music?.uri.toString())
+            startActivity(intent)
+        })
+
 
         //configute the music tabs
         setupTabs()
@@ -83,34 +105,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    //function to get the music list names in sdcard/Download/PATHMUSICS
-    fun getMusicNamesAvailable(): List<String> {
-        var musicsList = listOf<String>("Musica 1", "Musica 2", "Musica 3")
-        //Check if sdcard is mounted or not
-        if(getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-            Log.d(TAG, "The getExternalStorageState() is mounted")
-            // Accessing the downloads folder
-            val folder = getExternalStoragePublicDirectory("$DIRECTORY_DOWNLOADS/$PATHMUSICS")
-            if(folder.isDirectory){
-                //get the list of files inside the folder
-                val musicList = folder.listFiles()
-                if(musicList != null) {
-                    musicsList = musicList.map {it.name}
-                    //TODO: this for is only to test, remove this in feature
-                    for(music in musicsList) {
-                        //Log.d(TAG, "music: $music")
-                    }
-                } else {
-                    Log.d(TAG, "musicList == null")
-                }
-            } else {
-                Log.d(TAG, "$PATHMUSICS is NOT a directory")
-            }
-        } else {
-            Log.d(TAG, "The getExternalStorageState() is NOT mounted")
-        }
-        return musicsList
+    fun onClick(v: View?) {
+        val intent = Intent(this, PdfViewActivity::class.java)
+        intent.putExtra("ViewType", "storage")
+        startActivity(intent)
     }
-
 }

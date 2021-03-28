@@ -1,8 +1,12 @@
 package com.example.musiccifra.model
 
-import android.net.Uri
+import java.net.URI
 
 data class Music(
-        val nome: String,
-        val uri: Uri) {
+        val name: String,
+        val uri: URI
+) {
+    override fun toString(): String = name
+
+    //TODO override toString to return name witht pdf suffix
 }
