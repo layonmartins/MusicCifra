@@ -4,7 +4,8 @@ import java.net.URI
 
 data class Music(
         val name: String,
-        val uri: URI
+        val uri: URI,
+        val favorit: Boolean
 ) {
     override fun toString(): String = name
 

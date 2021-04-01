@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -23,14 +25,24 @@ class AllMusicAdapter(private val dataSet: Array<Music>) :
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener{
         val name: TextView
         val uri: TextView
+        val favorit: ViewGroup //view that contains the ImageView
+        val img_favorit: ImageView
 
         init {
             // Define click listener for the ViewHolder's View.
             name = view.findViewById(R.id.name)
             name.setOnClickListener(this@ViewHolder)
             uri = view.findViewById(R.id.uri)
+            img_favorit = view.findViewById(R.id.img_favorite)
+            favorit = view.findViewById(R.id.favorite)
+            favorit.setOnClickListener {
+                Log.d("layon.f", "Favorit Clicked")
+                img_favorit.setImageResource(R.drawable.ic_favorit_star_24)
+
+            }
             Log.d("layon.f", "init class ViewHolder")
         }
+
 
         override fun onClick(v: View?) {
             Log.d("layon.f", "OnClick position: $adapterPosition")
@@ -59,6 +71,12 @@ class AllMusicAdapter(private val dataSet: Array<Music>) :
         // contents of the view with that element
         viewHolder.name.text = dataSet[position].name
         viewHolder.uri.text = dataSet[position].uri.toString()
+        val isFavorit = dataSet[position].favorit
+        if(position > 2) {
+            viewHolder.img_favorit.setImageResource(R.drawable.ic_favorit_star_24)
+        } else {
+            viewHolder.img_favorit.setImageResource(R.drawable.ic_no_favorit_star_border_24)
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

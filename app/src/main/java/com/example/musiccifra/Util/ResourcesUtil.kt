@@ -9,7 +9,9 @@ import com.example.musiccifra.model.Music
 class ResourcesUtil {
 
     companion object {
+
         //function to get the music list names in sdcard/Download/PATHMUSICS
+        //and return as a list of Music
         fun getMusicNamesAvailable(): List<Music> {
             var musicsList = mutableListOf<Music>()
             //Check if sdcard is mounted or not
@@ -25,7 +27,7 @@ class ResourcesUtil {
                         //musicsList = musicList.map {it.name}
                             //interation the list and add in musicList
                                 for(file in fileList){
-                                    val music = Music(file.name, file.toURI())
+                                    val music = Music(file.name.removeSuffix(".pdf"), file.toURI(), false)
                                     musicsList.add(music)
                                 }
                     } else {

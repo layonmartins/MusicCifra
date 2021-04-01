@@ -34,12 +34,10 @@ const val READ_STORAGE_PERMISSION_REQUEST_CODE = 103
 const val TAG = "layon.f" //like: MusicApp
 
 //TODO create recycle list from all tabs
-//TODO create a static class ResourceUtils that get the list of music from sdcard/Download/PATHMUSICS
-//TODO open the music pdf from uri
+//TODO recycler view search
 //TODO add the favorite music list feature
 //TODO feature to download files from generic official music
 //TODO get the list of music out of UIThread
-//TODO implement the fragment
 //TODO a setting panel
 //TODO add support for Portugues e Espanhol
 //TODO open pdf on click
