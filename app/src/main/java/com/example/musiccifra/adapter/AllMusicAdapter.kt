@@ -25,7 +25,7 @@ class AllMusicAdapter(private val dataSet: Array<Music>) :
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener{
         val name: TextView
         val uri: TextView
-        val favorit: ViewGroup //view that contains the ImageView
+        val favorite: ViewGroup //view that contains the ImageView
         val img_favorit: ImageView
 
         init {
@@ -34,15 +34,8 @@ class AllMusicAdapter(private val dataSet: Array<Music>) :
             name.setOnClickListener(this@ViewHolder)
             uri = view.findViewById(R.id.uri)
             img_favorit = view.findViewById(R.id.img_favorite)
-            favorit = view.findViewById(R.id.favorite)
-            favorit.setOnClickListener {
-                Log.d("layon.f", "Favorit Clicked")
-                img_favorit.setImageResource(R.drawable.ic_favorit_star_24)
-
-            }
-            Log.d("layon.f", "init class ViewHolder")
+            favorite = view.findViewById(R.id.favorite)
         }
-
 
         override fun onClick(v: View?) {
             Log.d("layon.f", "OnClick position: $adapterPosition")
@@ -66,16 +59,22 @@ class AllMusicAdapter(private val dataSet: Array<Music>) :
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.name.text = dataSet[position].name
         viewHolder.uri.text = dataSet[position].uri.toString()
-        val isFavorit = dataSet[position].favorit
-        if(position > 2) {
+        val isFavorit = dataSet[position].favorite
+        if(isFavorit) {
             viewHolder.img_favorit.setImageResource(R.drawable.ic_favorit_star_24)
-        } else {
-            viewHolder.img_favorit.setImageResource(R.drawable.ic_no_favorit_star_border_24)
+        }
+        viewHolder.favorite.setOnClickListener {
+            if(dataSet[position].favorite) {
+                dataSet[position].favorite = false
+                viewHolder.img_favorit.setImageResource(R.drawable.ic_no_favorit_star_border_24)
+            } else {
+                dataSet[position].favorite = true
+                viewHolder.img_favorit.setImageResource(R.drawable.ic_favorit_star_24)
+            }
         }
     }
 

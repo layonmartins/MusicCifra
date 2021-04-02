@@ -34,7 +34,7 @@ const val READ_STORAGE_PERMISSION_REQUEST_CODE = 103
 const val TAG = "layon.f" //like: MusicApp
 
 //TODO create recycle list from all tabs
-//TODO recycler view search
+//TODO recycler view search https://stackoverflow.com/questions/30398247/how-to-filter-a-recyclerview-with-a-searchview
 //TODO add the favorite music list feature
 //TODO feature to download files from generic official music
 //TODO get the list of music out of UIThread
@@ -46,6 +46,8 @@ const val TAG = "layon.f" //like: MusicApp
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var musics: List<Music>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -56,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         //configure auto complete
-        val musics = ResourcesUtil.getMusicNamesAvailable()
+        Log.d("layon.f", "getMusicNamesAvailable()")
+        musics = ResourcesUtil.getMusicNamesAvailable()
         val adapter = ArrayAdapter<Music>(this, android.R.layout.simple_dropdown_item_1line, musics)
         etText.setAdapter(adapter)
         etText.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
