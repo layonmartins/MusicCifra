@@ -3,19 +3,22 @@ package com.example.musiccifra.activity
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment.*
 import android.util.Log
+import android.view.Menu
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.musiccifra.R
 import com.example.musiccifra.Util.ResourcesUtil
+import com.example.musiccifra.adapter.AllMusicAdapter
 import com.example.musiccifra.adapter.MyViewPagerAdapter
 import com.example.musiccifra.fragment.*
 import com.example.musiccifra.model.Music
@@ -46,7 +49,8 @@ const val TAG = "layon.f" //like: MusicApp
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var musics: List<Music>
+    lateinit var musics: MutableList<Music>
+    lateinit var allMusicAdapter: AllMusicAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +64,13 @@ class MainActivity : AppCompatActivity() {
         //configure auto complete
         Log.d("layon.f", "getMusicNamesAvailable()")
         musics = ResourcesUtil.getMusicNamesAvailable()
-        val adapter = ArrayAdapter<Music>(this, android.R.layout.simple_dropdown_item_1line, musics)
+        Log.d("layon.f", "musics = $musics")
+
+        //Populate the Global Adapter
+        allMusicAdapter = AllMusicAdapter(musics)
+
+        //TODO Remove the etText AutoComplete
+        /*val adapter = ArrayAdapter<Music>(this, android.R.layout.simple_dropdown_item_1line, musics)
         etText.setAdapter(adapter)
         etText.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
 
@@ -71,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("layon.f", "AutoComplite clicked name: ${music?.name} uri: ${music?.uri}")
             intent.putExtra("URI", music?.uri.toString())
             startActivity(intent)
-        })
+        })*/
 
 
         //configute the music tabs
@@ -90,7 +100,10 @@ class MainActivity : AppCompatActivity() {
     //Util function to check if the app has the permission
     fun checkPermissionForReadExtertalStorage(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val result: Int = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            val result: Int = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
             return result == PackageManager.PERMISSION_GRANTED
         }
         return false
@@ -99,8 +112,10 @@ class MainActivity : AppCompatActivity() {
     // function to request the permission to de user
     fun requestPermissionForReadExtertalStorage() {
         try {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    READ_STORAGE_PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                READ_STORAGE_PERMISSION_REQUEST_CODE
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -110,5 +125,25 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, PdfViewActivity::class.java)
         intent.putExtra("ViewType", "storage")
         startActivity(intent)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        var item = menu?.findItem(R.id.item_search)
+        var searchView : SearchView = item?.actionView as SearchView
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                allMusicAdapter.myFilter.filter(newText)
+                return false
+            }
+
+        })
+
+        return super.onCreateOptionsMenu(menu)
     }
 }

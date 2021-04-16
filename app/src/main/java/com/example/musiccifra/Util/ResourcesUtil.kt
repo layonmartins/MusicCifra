@@ -12,7 +12,8 @@ class ResourcesUtil {
 
         //function to get the music list names in sdcard/Download/PATHMUSICS
         //and return as a list of Music
-        fun getMusicNamesAvailable(): List<Music> {
+        //doesn't work on Android R
+        fun getMusicNamesAvailable(): MutableList<Music> {
             var musicsList = mutableListOf<Music>()
             //Check if sdcard is mounted or not
             if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
@@ -23,12 +24,12 @@ class ResourcesUtil {
                 if(folder.isDirectory){
                     //get the list of files inside the folder
                     val fileList = folder.listFiles()
+                    Log.d(TAG, "fileList: ${fileList.toString()}")
                     if(fileList != null) {
-                        //musicsList = musicList.map {it.name}
-                            //interation the list and add in musicList
                                 for(file in fileList){
                                     val music = Music(file.name.removeSuffix(".pdf"), file.toURI(), false)
                                     musicsList.add(music)
+                                    Log.d(TAG, "musicsList.add($music)")
                                 }
                     } else {
                         Log.d(TAG, "musicList == null")

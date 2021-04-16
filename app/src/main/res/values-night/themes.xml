@@ -1,19 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MusicCifra" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.MusicCifra" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/red</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/red</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/black</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
         <!-- Navigation bar color -->
         <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/black</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+
+        <!-- Action bar color -->
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <!-- TabLayout color -->
+    <style name="AppTheme.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+    <item name="android:background">@color/black</item>
+    <item name="tabIndicatorColor">@color/red</item>
+    <item name="tabSelectedTextColor">@color/red</item>
+    </style>
+
+    <!-- Action bar color -->
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/black</item>
+        <item name="background">@color/black</item>
     </style>
 </resources>

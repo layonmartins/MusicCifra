@@ -34,10 +34,8 @@ class OneFragment : Fragment() {
         //TODO create a static class ResourceUtils that get the list of music from sdcard/Download/PATHMUSICS
         //create a example test list
 
-        val musics = (activity as MainActivity).musics
-        Log.d("layon.f", "musics: ${musics.toString()}")
         //set the adapter
-        recyclerView.adapter = AllMusicAdapter(musics.toTypedArray())
+        recyclerView.adapter = (activity as MainActivity).allMusicAdapter
         //set layout manager
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager

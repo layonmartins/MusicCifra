@@ -1,22 +1,23 @@
 package com.example.musiccifra.adapter
 
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musiccifra.R
 import com.example.musiccifra.activity.PdfViewActivity
 import com.example.musiccifra.model.Music
 
-class AllMusicAdapter(private val dataSet: Array<Music>) :
-        RecyclerView.Adapter<AllMusicAdapter.ViewHolder>() {
+class AllMusicAdapter(private val dataSet: MutableList<Music>) :
+        RecyclerView.Adapter<AllMusicAdapter.ViewHolder>(), Filterable {
+
+    var dataSetAll = dataSet
 
     /**
      * Provide a reference to the type of views that you are using
@@ -80,5 +81,38 @@ class AllMusicAdapter(private val dataSet: Array<Music>) :
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
+
+
+    override fun getFilter(): Filter? {
+        return myFilter
+    }
+
+    var myFilter: Filter = object : Filter() {
+
+        //Automatic on background thread
+        override fun performFiltering(charSequence: CharSequence): FilterResults {
+            val filteredList: MutableList<Music> = ArrayList()
+            if (charSequence == null || charSequence.length == 0) {
+                filteredList.addAll(dataSetAll)
+            } else {
+                for (music in dataSetAll) {
+                    if (music.name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                        filteredList.add(music)
+                    }
+                }
+            }
+            val filterResults = FilterResults()
+            filterResults.values = filteredList
+            return filterResults
+        }
+
+        //Automatic on UI thread
+        override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+            dataSet.clear()
+            dataSet.addAll(filterResults.values as Collection<Music>)
+            notifyDataSetChanged()
+        }
+    }
+
 
 }
