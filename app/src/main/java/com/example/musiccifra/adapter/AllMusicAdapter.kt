@@ -47,6 +47,7 @@ class AllMusicAdapter(private val dataSet: MutableList<Music>) :
             //URI should be like: content://0@media/external/file/2792
             Log.d("layon.f", "onClick name: ${name.text} uri: ${uri.text}")
             intent.putExtra("URI", uri.text.toString())
+            intent.putExtra("NAME", name.text.toString())
             context?.startActivity(intent)
         }
     }

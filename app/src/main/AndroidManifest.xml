@@ -13,8 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicCifra">
-        <activity android:name=".activity.PdfViewActivity"></activity>
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.PdfViewActivity"
+            android:configChanges="uiMode"></activity>
+        <activity android:name=".activity.MainActivity"
+            android:configChanges="uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

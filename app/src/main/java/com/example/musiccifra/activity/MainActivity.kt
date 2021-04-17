@@ -3,6 +3,7 @@ package com.example.musiccifra.activity
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -73,6 +74,11 @@ class MainActivity : AppCompatActivity() {
         setupTabs()
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        recreate()
+    }
+
     private fun setupTabs(){
         val adapter = MyViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(OneFragment(), "Todas")
@@ -107,15 +113,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onClick(v: View?) {
-        val intent = Intent(this, PdfViewActivity::class.java)
-        intent.putExtra("ViewType", "storage")
-        startActivity(intent)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         var item = menu?.findItem(R.id.item_search)
+        if (isDarkModeOn()) {
+         item?.setIcon(R.drawable.ic_baseline_search_24_darkmode)
+        }
         var searchView : SearchView = item?.actionView as SearchView
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
@@ -132,5 +135,11 @@ class MainActivity : AppCompatActivity() {
         })
 
         return super.onCreateOptionsMenu(menu)
+    }
+
+    //method to check if dark mode is on
+    private fun isDarkModeOn(): Boolean {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 }
