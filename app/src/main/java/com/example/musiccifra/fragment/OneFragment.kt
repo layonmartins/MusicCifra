@@ -28,21 +28,24 @@ class OneFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        //get the recyclerView
-        val recyclerView = recyclerViewOne
-        //get the list of music
-        //TODO create a static class ResourceUtils that get the list of music from sdcard/Download/PATHMUSICS
-        //create a example test list
-
-        //set the adapter
-        recyclerView.adapter = (activity as MainActivity).allMusicAdapter
-        //set layout manager
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = layoutManager
-        //set divider
-        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
-                layoutManager.orientation)
-        recyclerView.addItemDecoration(dividerItemDecoration)
+        //if the music is empty
+        if ((activity as MainActivity).musics.isNotEmpty()) {
+            //disable the img
+            imgEmpty.visibility = View.GONE
+            //get the recyclerView
+            val recyclerView = recyclerViewOne
+            //set the adapter
+            recyclerView.adapter = (activity as MainActivity).allMusicAdapter
+            //set layout manager
+            val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            recyclerView.layoutManager = layoutManager
+            //set divider
+            val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
+                    layoutManager.orientation)
+            recyclerView.addItemDecoration(dividerItemDecoration)
+        } else {
+            imgEmpty.visibility = View.VISIBLE
+        }
     }
 
     companion object {

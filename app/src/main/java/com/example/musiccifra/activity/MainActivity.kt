@@ -69,21 +69,6 @@ class MainActivity : AppCompatActivity() {
         //Populate the Global Adapter
         allMusicAdapter = AllMusicAdapter(musics)
 
-        //TODO Remove the etText AutoComplete
-        /*val adapter = ArrayAdapter<Music>(this, android.R.layout.simple_dropdown_item_1line, musics)
-        etText.setAdapter(adapter)
-        etText.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
-
-            //TODO create a util method to call the PdfViewActivity
-            val intent = Intent(this, PdfViewActivity::class.java)
-            //URI should be like: content://0@media/external/file/2792
-            val music = adapter.getItem(position)
-            Log.d("layon.f", "AutoComplite clicked name: ${music?.name} uri: ${music?.uri}")
-            intent.putExtra("URI", music?.uri.toString())
-            startActivity(intent)
-        })*/
-
-
         //configute the music tabs
         setupTabs()
     }
@@ -112,6 +97,7 @@ class MainActivity : AppCompatActivity() {
     // function to request the permission to de user
     fun requestPermissionForReadExtertalStorage() {
         try {
+            Log.d("layon.f", "requestPermissionForReadExtertalStorage()")
             ActivityCompat.requestPermissions(
                 this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 READ_STORAGE_PERMISSION_REQUEST_CODE
@@ -134,7 +120,8 @@ class MainActivity : AppCompatActivity() {
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                TODO("Not yet implemented")
+                allMusicAdapter.myFilter.filter(query)
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {

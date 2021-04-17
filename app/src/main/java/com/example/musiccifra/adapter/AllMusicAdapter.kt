@@ -17,7 +17,9 @@ import com.example.musiccifra.model.Music
 class AllMusicAdapter(private val dataSet: MutableList<Music>) :
         RecyclerView.Adapter<AllMusicAdapter.ViewHolder>(), Filterable {
 
-    var dataSetAll = dataSet
+    //create a copy of dataSet, so dataSetAll always will have the list of all musics
+    //this is need because the dataSet can be filtered by searchView
+    var dataSetAll = dataSet.toMutableList()
 
     /**
      * Provide a reference to the type of views that you are using
@@ -84,6 +86,7 @@ class AllMusicAdapter(private val dataSet: MutableList<Music>) :
 
 
     override fun getFilter(): Filter? {
+        Log.d("layon.f", "getFilter()")
         return myFilter
     }
 
@@ -91,8 +94,12 @@ class AllMusicAdapter(private val dataSet: MutableList<Music>) :
 
         //Automatic on background thread
         override fun performFiltering(charSequence: CharSequence): FilterResults {
+            Log.d("layon.f", "performFiltering(CharSequence: $charSequence)")
             val filteredList: MutableList<Music> = ArrayList()
-            if (charSequence == null || charSequence.length == 0) {
+
+            //filteredList.addAll(dataSetAll)
+            /*if (charSequence != null) {
+                for (music in dataSetAll) { /*if (charSequence == null || charSequence.length == 0) {
                 filteredList.addAll(dataSetAll)
             } else {
                 for (music in dataSetAll) {
@@ -100,7 +107,24 @@ class AllMusicAdapter(private val dataSet: MutableList<Music>) :
                         filteredList.add(music)
                     }
                 }
+            }*/
+                    if (music.name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                        filteredList.add(music)
+                    }
+                }
+            }*/
+
+            if (charSequence == null || charSequence.length == 0) {
+                filteredList.addAll(dataSetAll)
+            } else {
+                for (music in dataSetAll) {
+                    if (music.name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                        Log.d("layon.f", "filteredList.add($music)")
+                        filteredList.add(music)
+                    }
+                }
             }
+
             val filterResults = FilterResults()
             filterResults.values = filteredList
             return filterResults
@@ -108,8 +132,13 @@ class AllMusicAdapter(private val dataSet: MutableList<Music>) :
 
         //Automatic on UI thread
         override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+            Log.d("layon.f", "publishResults(CharSequence: $charSequence, FilterResults: $filterResults)")
+            for (music in filterResults.values as Collection<Music>) {
+                Log.d("layon.f", "filter musics: $music")
+            }
             dataSet.clear()
             dataSet.addAll(filterResults.values as Collection<Music>)
+            Log.d("layon.f", "filter musics size: ${(filterResults.values as Collection<Music>).size}")
             notifyDataSetChanged()
         }
     }
