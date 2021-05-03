@@ -4,15 +4,11 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment.*
 import android.util.Log
 import android.view.Menu
-import android.view.View
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
@@ -23,6 +19,7 @@ import com.example.musiccifra.adapter.AllMusicAdapter
 import com.example.musiccifra.adapter.MyViewPagerAdapter
 import com.example.musiccifra.fragment.*
 import com.example.musiccifra.model.Music
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -47,6 +44,7 @@ const val TAG = "layon.f" //like: MusicApp
 //TODO open pdf on click
 //TODO apply styles on Material AutoComplete
 //TODO rework the autocomplete: It is like be good, the texts are overriding. Maybe is better to hide the recycler view before.
+//TODO remove the action bar to use a Toolbar in order to hide when scroll up the screen in recycler view
 
 class MainActivity : AppCompatActivity() {
 
@@ -72,6 +70,23 @@ class MainActivity : AppCompatActivity() {
 
         //configute the music tabs
         setupTabs()
+
+        //add listener on fab button
+        fab.setOnClickListener{ view ->
+            Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+                    .show()
+
+
+            // TODO try user some of ACTION_PICK, ACTION_CHOOSER, ACTION_GET_CONTENT or ACTION_SEARCH to pick the pdf files uri and add to my music list
+            //example https://stackoverflow.com/questions/51762094/choose-pdf-or-image-files-from-google-drive-intent
+            //example https://stackoverflow.com/questions/32232412/android-select-pdf-using-intent-on-api-18
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.setType("application/pdf");
+            //intent.setDataAndType(Uri.fromFile(file), "application/pdf")
+            //intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+            startActivity(intent)
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -92,8 +107,8 @@ class MainActivity : AppCompatActivity() {
     fun checkPermissionForReadExtertalStorage(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val result: Int = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
             )
             return result == PackageManager.PERMISSION_GRANTED
         }
@@ -105,8 +120,8 @@ class MainActivity : AppCompatActivity() {
         try {
             Log.d("layon.f", "requestPermissionForReadExtertalStorage()")
             ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                READ_STORAGE_PERMISSION_REQUEST_CODE
+                    this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    READ_STORAGE_PERMISSION_REQUEST_CODE
             )
         } catch (e: Exception) {
             e.printStackTrace()
