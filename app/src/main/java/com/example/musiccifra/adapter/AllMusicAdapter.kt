@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musiccifra.R
 import com.example.musiccifra.activity.PdfViewActivity
 import com.example.musiccifra.model.Music
+import java.text.Normalizer
 
 class AllMusicAdapter(private val dataSet: MutableList<Music>) :
         RecyclerView.Adapter<AllMusicAdapter.ViewHolder>(), Filterable {
@@ -119,7 +120,8 @@ class AllMusicAdapter(private val dataSet: MutableList<Music>) :
                 filteredList.addAll(dataSetAll)
             } else {
                 for (music in dataSetAll) {
-                    if (music.name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                    if (music.name.unaccent().toLowerCase().contains(charSequence.toString().unaccent().toLowerCase())) {
+                        Log.d("layon.f", "normalize: ${music.name.unaccent()}")
                         Log.d("layon.f", "filteredList.add($music)")
                         filteredList.add(music)
                     }
@@ -129,6 +131,13 @@ class AllMusicAdapter(private val dataSet: MutableList<Music>) :
             val filterResults = FilterResults()
             filterResults.values = filteredList
             return filterResults
+        }
+
+        //extension function to remove accents of the Strings
+        private val REGEX_UNACCENT = "\\p{InCombiningDiacriticalMarks}+".toRegex()
+        fun CharSequence.unaccent(): String {
+            val temp = Normalizer.normalize(this, Normalizer.Form.NFD)
+            return REGEX_UNACCENT.replace(temp, "")
         }
 
         //Automatic on UI thread
