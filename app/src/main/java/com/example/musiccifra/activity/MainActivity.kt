@@ -1,6 +1,7 @@
 package com.example.musiccifra.activity
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -26,7 +27,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 //Kotlin Top constants:
 
 //Folder containing the PDF musics files
-const val PATHMUSICS = "PJFPDFMusics"
+const val PATHMUSICS = "PTKMusicas"
 
 // Any code to get permission
 const val READ_STORAGE_PERMISSION_REQUEST_CODE = 103
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var musics: MutableList<Music>
     lateinit var allMusicAdapter: AllMusicAdapter
+    val REQUEST_ADD_CODE = 111
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,11 +83,34 @@ class MainActivity : AppCompatActivity() {
             // TODO try user some of ACTION_PICK, ACTION_CHOOSER, ACTION_GET_CONTENT or ACTION_SEARCH to pick the pdf files uri and add to my music list
             //example https://stackoverflow.com/questions/51762094/choose-pdf-or-image-files-from-google-drive-intent
             //example https://stackoverflow.com/questions/32232412/android-select-pdf-using-intent-on-api-18
+            //example https://rrtutors.com/site/answer/How-to-open-PDF-in-Google-Drive-with-intent
+            //example https://stackoverflow.com/questions/40845939/how-to-download-txt-or-pdf-file-from-google-drive-that-is-picked-using-intent
+
+            //val intent = Intent(Intent.ACTION_PICK)
+            //val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.setType("application/pdf");
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            //intent.type = "application/pdf";
+            intent.type = "application/pdf";
             //intent.setDataAndType(Uri.fromFile(file), "application/pdf")
             //intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_ADD_CODE)
+        }
+    }
+
+    // This method is called when the second activity finishes
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Check that it is the SecondActivity with an OK result
+        if (requestCode == REQUEST_ADD_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                // Get String data from Intent
+                val returnString = data?.data
+
+                Log.i("layon.f", "returnString: $returnString")
+            }
         }
     }
 
